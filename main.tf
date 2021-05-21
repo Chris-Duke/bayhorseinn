@@ -12,7 +12,7 @@ provider "aws" {
   region  = "us-west-2"
 }
 
-resource "aws_instance" "TechTest" {
+resource "aws_instance" "BayHorseInn" {
   ami                         = var.ami_value
   instance_type               = var.instance_type
   security_groups             = ["access-controls"]
@@ -30,7 +30,7 @@ resource "aws_instance" "TechTest" {
 
   connection {
     type  = "ssh"
-    host  = aws_instance.TechTest.public_ip
+    host  = aws_instance.BayHorseInn.public_ip
     user  = var.ssh_user
     port  = var.ssh_port
     agent = true
@@ -53,7 +53,7 @@ resource "aws_instance" "TechTest" {
 
 output "instance_public_ip" {
   description = "Public IP address of the EC2 instance"
-  value       = aws_instance.TechTest.public_ip
+  value       = aws_instance.BayHorseInn.public_ip
 }
 
 resource "aws_key_pair" "ssh-key" {
@@ -69,21 +69,37 @@ resource "aws_security_group" "access-controls" {
     from_port   = var.ssh_port
     to_port     = var.ssh_port
     protocol    = "tcp"
-    description = "SSH"
+    description = "SSH Port"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = var.http_port
+    to_port     = var.http_port
+    protocol    = "tcp"
+    description = "HTTP Port"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   ingress {
+    from_port   = var.https_port
+    to_port     = var.https_port
+    protocol    = "tcp"
+    description = "HTTPS Port"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = var.http_port
+    to_port     = var.http_port
     protocol    = "tcp"
     description = "HTTP Port"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port   = 443
-    to_port     = 443
+    from_port   = var.https_port
+    to_port     = var.https_port
     protocol    = "tcp"
     description = "HTTPS Port"
     cidr_blocks = ["0.0.0.0/0"]

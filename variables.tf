@@ -16,6 +16,18 @@ variable "ssh_port" {
   default     = 22
 }
 
+variable "http_port" {
+  description = "The port the EC2 Instance should listen on for HTTP requests."
+  type        = number
+  default     = 80
+}
+
+variable "https_port" {
+  description = "The port the EC2 Instance should listen on for HTTPS requests."
+  type        = number
+  default     = 443
+}
+
 variable "ssh_user" {
   description = "The user you connect as when attempting an SSH connection."
   type        = string
